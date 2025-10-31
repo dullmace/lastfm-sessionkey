@@ -1,13 +1,14 @@
+/* Dark mode only, Last.fm accent */
 :root {
-  --bg: #0b0c0f;
-  --surface: #121418;
-  --surface-2: #161a1f;
-  --text: #e6e7eb;
-  --muted: #9aa0aa;
-  --border: #242833;
+  --bg: #0b0c0f;           /* near-black background */
+  --surface: #121418;      /* card surface */
+  --surface-2: #161a1f;    /* input surface */
+  --text: #e6e7eb;         /* primary text */
+  --muted: #9aa0aa;        /* secondary text */
+  --border: #242833;       /* subtle borders */
   --border-strong: #2b303b;
-  --accent: #d51007;
-  --accent-press: #b40f07;
+  --accent: #d51007;       /* Last.fm red */
+  --accent-press: #b40f07; /* pressed */
   --success: #22c55e;
   --danger: #ef4444;
   --radius: 12px;
@@ -294,7 +295,7 @@ body {
 }
 
 .link {
-  color: #ffb3ad;
+  color: #ffb3ad; /* softer red for links */
   text-decoration: none;
   border-bottom: 1px solid #3a0e0c;
 }
@@ -314,4 +315,3 @@ body {
   color: var(--danger);
   font-size: 12px;
 }
-
