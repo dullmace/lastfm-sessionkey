@@ -7,135 +7,111 @@
       content="width=device-width, initial-scale=1, viewport-fit=cover"
     />
     <title>Last.fm Session Key Generator</title>
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap"
-      rel="stylesheet"
-    />
     <link rel="stylesheet" href="styles.css" />
-    <meta name="color-scheme" content="light dark" />
   </head>
   <body>
     <main class="page">
-      <section class="card">
+      <section class="card" role="region" aria-labelledby="title">
         <header class="card__header">
-          <div class="icon-badge" aria-hidden="true">🎵</div>
-          <div>
-            <h1 class="title">Last.fm Session Key Generator</h1>
-            <p class="subtitle">
-              Generate a session key to authenticate Last.fm API requests
-            </p>
-          </div>
+          <h1 id="title" class="title">Last.fm Session Key Generator</h1>
+          <p class="subtitle">
+            Generate a session key to authenticate Last.fm API requests.
+          </p>
         </header>
 
         <ol class="steps">
           <li class="step">
-            <div class="step__number">1</div>
-            <div class="step__content">
-              <h3>Create an API application</h3>
-              <p>
-                Go to
-                <a
-                  href="https://www.last.fm/api/account/create"
-                  target="_blank"
-                  rel="noopener"
-                  class="link"
-                  >last.fm/api/account/create</a
-                >
-                and grab your API Key and Shared Secret.
-              </p>
-            </div>
+            <h3 class="step__title">1. Create an API application</h3>
+            <p class="muted">
+              Visit
+              <a
+                href="https://www.last.fm/api/account/create"
+                target="_blank"
+                rel="noopener"
+                class="link"
+                >last.fm/api/account/create</a
+              >
+              to get your API Key and Shared Secret.
+            </p>
           </li>
 
           <li class="step">
-            <div class="step__number">2</div>
-            <div class="step__content">
-              <h3>Enter your credentials</h3>
-              <div class="grid">
-                <div class="input-group">
-                  <label for="apiKey">API Key</label>
+            <h3 class="step__title">2. Enter your credentials</h3>
+            <div class="grid">
+              <div class="input-group">
+                <label for="apiKey">API Key</label>
+                <input
+                  type="text"
+                  id="apiKey"
+                  autocomplete="off"
+                  placeholder="Your API Key"
+                  aria-describedby="apiKeyError"
+                />
+                <small id="apiKeyError" class="error-text" role="alert"></small>
+              </div>
+
+              <div class="input-group">
+                <label for="sharedSecret">Shared Secret</label>
+                <div class="password-wrap">
                   <input
-                    type="text"
-                    id="apiKey"
-                    inputmode="text"
+                    type="password"
+                    id="sharedSecret"
                     autocomplete="off"
-                    placeholder="e.g. 1234567890abcdef..."
-                    aria-describedby="apiKeyHelp apiKeyError"
+                    placeholder="Your Shared Secret"
+                    aria-describedby="secretError"
                   />
-                  <small id="apiKeyHelp" class="help"
-                    >Never share your API key publicly.</small
+                  <button
+                    type="button"
+                    class="icon-btn"
+                    id="toggleSecret"
+                    aria-label="Show secret"
+                    title="Show/Hide"
                   >
-                  <small id="apiKeyError" class="error-text" role="alert"></small>
+                    👁️
+                  </button>
                 </div>
-
-                <div class="input-group">
-                  <label for="sharedSecret">Shared Secret</label>
-                  <div class="password-wrap">
-                    <input
-                      type="password"
-                      id="sharedSecret"
-                      inputmode="text"
-                      autocomplete="off"
-                      placeholder="Your Shared Secret"
-                      aria-describedby="secretHelp secretError"
-                    />
-                    <button
-                      type="button"
-                      class="ghost-btn"
-                      id="toggleSecret"
-                      aria-label="Show secret"
-                      title="Show/Hide"
-                    >
-                      👁️
-                    </button>
-                  </div>
-                  <small id="secretHelp" class="help"
-                    >Stored locally and cleared after success.</small
-                  >
-                  <small id="secretError" class="error-text" role="alert"></small>
-                </div>
+                <small id="secretError" class="error-text" role="alert"></small>
               </div>
             </div>
           </li>
 
           <li class="step">
-            <div class="step__number">3</div>
-            <div class="step__content">
-              <h3>Authorize and fetch session key</h3>
-              <p>
-                You’ll be redirected to Last.fm to grant access, then back here
-                to finish the flow.
+            <h3 class="step__title">3. Authorize and fetch</h3>
+            <p class="muted">
+              You’ll be redirected to Last.fm to grant access, then sent back
+              here automatically.
+            </p>
+
+            <button class="btn btn-accent" id="authorizeBtn">
+              Authorize with Last.fm
+            </button>
+
+            <div class="loading" id="loading" aria-live="polite">
+              <div class="spinner" aria-hidden="true"></div>
+              <p>Generating session key…</p>
+            </div>
+
+            <div class="toast toast--error" id="error" role="alert"></div>
+
+            <div class="result" id="result" aria-live="polite">
+              <h3 class="result__title">Session key</h3>
+              <pre class="code-block"><code id="sessionKeyOutput"></code></pre>
+              <div class="actions">
+                <button class="btn btn-secondary" id="copyBtn">
+                  Copy to clipboard
+                </button>
+                <button class="btn btn-ghost" id="resetBtn">Reset</button>
+              </div>
+              <p class="note muted">
+                Keep this key secret. It’s stored nowhere server-side.
               </p>
-              <button class="btn btn-primary" id="authorizeBtn">
-                Authorize with Last.fm
-                <span class="btn-sparkle" aria-hidden="true"></span>
-              </button>
-
-              <div class="loading" id="loading" aria-live="polite">
-                <div class="spinner"></div>
-                <p>Generating session key…</p>
-              </div>
-
-              <div class="toast toast--error" id="error" role="alert"></div>
-
-              <div class="result" id="result" aria-live="polite">
-                <h3 class="result__title">Success! Your session key:</h3>
-                <pre class="code-block"><code id="sessionKeyOutput"></code></pre>
-                <div class="actions">
-                  <button class="btn btn-success" id="copyBtn">
-                    Copy to clipboard
-                  </button>
-                  <button class="btn btn-ghost" id="resetBtn">Reset</button>
-                </div>
-                <p class="note">
-                  Keep this key secret. You’ll use it with your API Key and
-                  Shared Secret to make authenticated requests.
-                </p>
-              </div>
             </div>
           </li>
         </ol>
 
+        <footer class="footer muted">
+          No servers. Runs in your browser.
+        </footer>
       </section>
     </main>
 
