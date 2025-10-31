@@ -1,4 +1,4 @@
-// MD5 hashing function (unchanged)
+// MD5 hashing function
 function md5(str) {
   function md5cycle(x, k) {
     var a = x[0],
@@ -143,6 +143,7 @@ function md5(str) {
 }
 
 // ——— UI elements ———
+
 const authorizeBtn = document.getElementById("authorizeBtn");
 const apiKeyInput = document.getElementById("apiKey");
 const sharedSecretInput = document.getElementById("sharedSecret");
@@ -164,7 +165,6 @@ function showSuccess(sessionKey) {
   sessionKeyOutput.textContent = sessionKey;
   resultDiv.style.display = "block";
   errorDiv.style.display = "none";
-  // Clean up URL but preserve base + searchless path
   window.history.replaceState({}, document.title, window.location.pathname);
 }
 
@@ -173,7 +173,6 @@ function setLoading(isLoading) {
   authorizeBtn.disabled = isLoading;
 }
 
-// ——— Return-from-Last.fm handler ———
 window.addEventListener("load", async () => {
   const urlParams = new URLSearchParams(window.location.search);
   const token = urlParams.get("token");
@@ -190,7 +189,6 @@ window.addEventListener("load", async () => {
   }
 });
 
-// ——— Interactions ———
 authorizeBtn.addEventListener("click", () => {
   const apiKey = apiKeyInput.value.trim();
   const sharedSecret = sharedSecretInput.value.trim();
@@ -211,11 +209,9 @@ authorizeBtn.addEventListener("click", () => {
     return;
   }
 
-  // Store temporarily (local only)
   localStorage.setItem("lastfm_api_key", apiKey);
   localStorage.setItem("lastfm_shared_secret", sharedSecret);
 
-  // Redirect to Last.fm authorization
   const callbackUrl = window.location.href.split("?")[0];
   window.location.href = `https://www.last.fm/api/auth/?api_key=${encodeURIComponent(
     apiKey
@@ -226,11 +222,11 @@ copyBtn.addEventListener("click", async () => {
   const sessionKey = sessionKeyOutput.textContent;
   try {
     await navigator.clipboard.writeText(sessionKey);
-    copyBtn.textContent = "✓ Copied!";
+    copyBtn.textContent = "✓ Copied";
   } catch {
     copyBtn.textContent = "Copy failed";
   } finally {
-    setTimeout(() => (copyBtn.textContent = "Copy to clipboard"), 2000);
+    setTimeout(() => (copyBtn.textContent = "Copy to clipboard"), 1800);
   }
 });
 
@@ -246,7 +242,10 @@ resetBtn.addEventListener("click", () => {
 toggleSecretBtn.addEventListener("click", () => {
   const isPassword = sharedSecretInput.type === "password";
   sharedSecretInput.type = isPassword ? "text" : "password";
-  toggleSecretBtn.setAttribute("aria-label", isPassword ? "Hide secret" : "Show secret");
+  toggleSecretBtn.setAttribute(
+    "aria-label",
+    isPassword ? "Hide secret" : "Show secret"
+  );
 });
 
 // ——— Core ———
